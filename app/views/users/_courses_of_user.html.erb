@@ -10,7 +10,7 @@
     </tr>
     <% @user.try(:courses).each do |course| %>
       <tr>
-        <td><%= link_to course.title, course_path(course) %></td>
+        <td><%= link_to course.title, user_course_path(@user, course) %></td>
         <td><%= course.status %></td>
         <td><%= course.start_time %></td>
         <td><%= course.end_time %></td>

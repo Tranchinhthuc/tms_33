@@ -9,6 +9,15 @@ Rails.application.routes.draw do
     put "users" => "devise/registrations#update", :as => "user_registration"
   end
 
+  devise_scope :user do
+    authenticated :user do
+      root "static_pages#home", as: :authenticated_root
+    end
+    unauthenticated do
+      root "devise/sessions#new", as: :unauthenticated_root
+    end
+  end
+
   root "static_pages#home"
   get "help" => "static_pages#help"
   get "about" => "static_pages#about"
@@ -31,18 +40,10 @@ Rails.application.routes.draw do
     resources :activities, only: [:index, :destroy]
   end
 
-  devise_scope :user do
-    authenticated :user do
-      root "static_pages#home", as: :authenticated_root
-    end
-    unauthenticated do
-      root "static_pages#home", as: :unauthenticated_root
-    end
-  end
-
-  resources :users
   resources :user_subjects, only: :update
-  resources :courses, only: :show do
-    resources :subjects, only: :show
+  resources :users,  only: [:show, :edit, :update] do
+    resources :courses, only: :show do
+      resources :subjects, only: :show
+    end
   end
 end
